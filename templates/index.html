@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>羊肚菌智能检测系统</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-top: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        /* 检测类型选择器 */
+        .detection-type-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            gap: 15px;
+        }
+        .type-option {
+            padding: 12px 25px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none; /* 防止双击选中文字 */
+        }
+        .type-option:hover {
+            border-color: #4a6baf;
+            background-color: #f8faff;
+        }
+        .type-option.active {
+            border-color: #4a6baf;
+            background-color: #4a6baf;
+            color: white;
+        }
+        .type-icon {
+            font-size: 1.2em;
+        }
+        
+        /* 上传区域样式 */
+        .upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #fafafa;
+        }
+        .upload-area:hover {
+            border-color: #4a6baf;
+            background-color: #f8faff;
+        }
+        .upload-area.dragover {
+            border-color: #4a6baf;
+            background-color: #f0f4ff;
+        }
+        .upload-icon {
+            font-size: 48px;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+        }
+        #file-input {
+            display: none;
+        }
+        
+        /* 按钮样式 */
+        button {
+            background-color: #4a6baf;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            display: block;
+            margin: 25px auto;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 6px rgba(74, 107, 175, 0.2);
+            width: 200px;
+        }
+        button:hover {
+            background-color: #3a5a9f;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(74, 107, 175, 0.3);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* 结果展示区 */
+        #result {
+            margin-top: 30px;
+            text-align: center; /* 让图片居中 */
+        }
+        #output-image {
+            max-width: 100%;
+            max-height: 600px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: none;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 30px 0;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4a6baf;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* 检测结果列表 */
+        .detections {
+            margin-top: 25px;
+            text-align: left;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #4a6baf;
+        }
+        .detection-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .detection-item:last-child {
+            border-bottom: none;
+        }
+        .confidence-bar {
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin-top: 5px;
+            overflow: hidden;
+            width: 120px;
+        }
+        .confidence-level {
+            height: 100%;
+            background: linear-gradient(to right, #64b3f4, #4a6baf);
+            border-radius: 5px;
+        }
+        .no-detections {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            padding: 15px;
+        }
+        
+        /* 消息提示 */
+        .message {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 500;
+            position: fixed; /* 固定在顶部 */
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            min-width: 300px;
+            text-align: center;
+            animation: fadeIn 0.3s, fadeOut 0.3s 3.7s;
+        }
+        @keyframes fadeIn { from { opacity: 0; top: 0; } to { opacity: 1; top: 20px; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+        .error-message { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; }
+        .success-message { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; }
+        .info-message { color: #0c5460; background-color: #d1ecf1; border: 1px solid #bee5eb; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>羊肚菌智能检测系统</h1>
+        <div class="subtitle">基于 YOLO 模型的羊肚菌种类识别与成熟度检测</div>
+        
+        <div class="detection-type-selector">
+            <div class="type-option active" data-type="species">
+                <span class="type-icon">🍄</span>
+                <span>种类识别</span>
+            </div>
+            <div class="type-option" data-type="maturity">
+                <span class="type-icon">📊</span>
+                <span>成熟度检测</span>
+            </div>
+        </div>
+        
+        <div class="upload-area" id="upload-area">
+            <div class="upload-icon">📁</div>
+            <p>点击选择图片或拖拽图片到此处</p>
+            <p style="color: #999; font-size: 0.9em;">支持 JPG, PNG, JPEG 格式</p>
+            <input type="file" id="file-input" accept="image/*">
+        </div>
+        
+        <button id="detect-btn" disabled>开始识别</button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>正在智能分析中，请稍候...</p>
+        </div>
+        
+        <div id="result">
+            <img id="output-image" alt="检测结果">
+            <div id="detections-container" class="detections" style="display: none;">
+                <h3>检测结果统计:</h3>
+                <div id="detections-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 页面元素引用
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const detectBtn = document.getElementById('detect-btn');
+        const loading = document.getElementById('loading');
+        const outputImage = document.getElementById('output-image');
+        const detectionsContainer = document.getElementById('detections-container');
+        const detectionsContent = document.getElementById('detections-content');
+        const typeOptions = document.querySelectorAll('.type-option');
+
+        // 状态变量
+        let currentFile = null;
+        let currentDetectionType = 'species'; // 默认: species (种类) 或 maturity (成熟度)
+
+        // 1. 初始化: 设置按钮文本
+        updateDetectButtonText();
+
+        // 2. 绑定切换检测类型的事件
+        typeOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // 样式切换
+                typeOptions.forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                
+                // 逻辑切换
+                currentDetectionType = this.getAttribute('data-type');
+                updateDetectButtonText();
+                
+                // 提示用户
+                const modeName = currentDetectionType === 'species' ? '种类识别' : '成熟度检测';
+                showMessage(`已切换模式: ${modeName}`, 'info');
+            });
+        });
+
+        function updateDetectButtonText() {
+            detectBtn.textContent = currentDetectionType === 'species' ? '开始种类识别' : '开始成熟度检测';
+        }
+
+        // 3. 绑定文件上传交互
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        // 拖拽效果
+        uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect();
+            }
+        });
+
+        fileInput.addEventListener('change', handleFileSelect);
+
+        function handleFileSelect() {
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                currentFile = file;
+                
+                if (!file.type.match('image.*')) {
+                    showMessage('文件格式错误，请上传图片。', 'error');
+                    detectBtn.disabled = true;
+                    return;
+                }
+                
+                // 本地预览
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    outputImage.src = e.target.result;
+                    outputImage.style.display = 'block';
+                    detectBtn.disabled = false; // 启用按钮
+                    
+                    // 隐藏之前的旧结果
+                    detectionsContainer.style.display = 'none';
+                    showMessage('图片已就绪，请点击按钮开始检测', 'info');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // 4. 核心：点击按钮发送请求
+        detectBtn.addEventListener('click', runDetection);
+
+        function runDetection() {
+            if (!currentFile) return;
+            
+            // UI 状态更新
+            loading.style.display = 'block';
+            detectBtn.disabled = true;
+            detectionsContainer.style.display = 'none';
+            
+            const formData = new FormData();
+            formData.append('image', currentFile);
+            
+            // 动态决定 API 地址
+            const apiEndpoint = currentDetectionType === 'species' ? '/detect' : '/detect_maturity';
+            
+            fetch(apiEndpoint, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                detectBtn.disabled = false;
+
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                if (data.success) {
+                    // 更新结果图 (加时间戳防缓存)
+                    outputImage.src = data.processed_image + '?t=' + new Date().getTime();
+                    outputImage.style.display = 'block';
+                    
+                    displayDetections(data.detections);
+                    showMessage('检测完成！', 'success');
+                }
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                detectBtn.disabled = false;
+                console.error('Error:', error);
+                showMessage(error.message || '服务器连接失败', 'error');
+            });
+        }
+
+        // 5. 渲染检测数据列表
+        function displayDetections(detections) {
+            detectionsContent.innerHTML = '';
+            
+            if (!detections || detections.length === 0) {
+                detectionsContent.innerHTML = '<div class="no-detections">未检测到相关目标</div>';
+            } else {
+                let html = '';
+                detections.forEach(det => {
+                    const confidencePercent = Math.round(det.confidence * 100);
+                    html += `
+                        <div class="detection-item">
+                            <div>
+                                <strong>${det.class}</strong> 
+                                <span style="color: #6c757d; font-size: 0.9em; margin-left:10px;">(置信度: ${confidencePercent}%)</span>
+                            </div>
+                            <div style="min-width: 150px; text-align: right;">
+                                <div class="confidence-bar">
+                                    <div class="confidence-level" style="width: ${confidencePercent}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                detectionsContent.innerHTML = html;
+            }
+            detectionsContainer.style.display = 'block';
+        }
+
+        // 6. 通用消息提示框
+        function showMessage(msg, type) {
+            const existing = document.querySelector('.message');
+            if (existing) existing.remove();
+            
+            const div = document.createElement('div');
+            div.className = `message ${type}-message`;
+            div.textContent = msg;
+            document.body.appendChild(div);
+            
+            setTimeout(() => {
+                if (div.parentNode) div.remove();
+            }, 4000);
+        }
+    </script>
+</body>
+</html>
