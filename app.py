@@ -6,17 +6,23 @@ import os
 from werkzeug.utils import secure_filename
 from PIL import Image
 from ultralytics import YOLO
+from pathlib import Path
 
 app = Flask(__name__, static_folder='.', template_folder='')
 
 # === 配置 ===
-UPLOAD_FOLDER = 'uploads'
-PROCESSED_FOLDER = 'processed'
+# 获取当前文件所在目录
+BASE_DIR = Path(__file__).parent
+
+# 使用相对路径
+UPLOAD_FOLDER = BASE_DIR / 'uploads'
+PROCESSED_FOLDER = BASE_DIR / 'processed'
+MODEL_PATH_TYPE = BASE_DIR / 'model/type/best.pt'
+MODEL_PATH_MATURITY = BASE_DIR / 'model/maturity/best.pt'
 
 # 确保目录存在
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PROCESSED_FOLDER, exist_ok=True)
-
 # 允许的文件扩展名
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
