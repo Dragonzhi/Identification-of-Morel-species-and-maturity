@@ -336,3 +336,27 @@ let currentFile = null;
 let currentDetectionType = 'species';
 
 console.log('羊肚菌智能检测系统脚本加载完成');
+
+
+// 图片预览功能
+document.getElementById('file-input').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const previewImg = document.getElementById('preview-image');
+    
+    if (file) {
+        // 显示预览图
+        previewImg.src = URL.createObjectURL(file);
+        previewImg.style.display = 'block';
+        
+        // 隐藏上传提示文字
+        document.querySelector('.upload-card h3').style.display = 'none';
+        document.querySelector('.upload-card p').style.display = 'none';
+        document.querySelector('.upload-card .file-types').style.display = 'none';
+    }
+});
+
+// 移除以下重复的点击事件监听器
+// 点击上传区域触发文件选择
+// document.getElementById('upload-area').addEventListener('click', function() {
+//     document.getElementById('file-input').click();
+// });
