@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 from PIL import Image
 from ultralytics import YOLO
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='.', template_folder='')
 
 # === 配置 ===
 UPLOAD_FOLDER = 'uploads'
@@ -106,7 +106,8 @@ def process_image(image_path, model):
 @app.route('/')
 def index():
     # 直接渲染 templates/index.html
-    return render_template('index.html')
+    # return render_template('index.html')
+    return send_file('index.html')
 
 # 种类检测 API
 @app.route('/detect', methods=['POST'])
