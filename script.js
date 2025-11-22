@@ -3,7 +3,22 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('羊肚菌智能检测系统初始化...');
     initializeEventListeners();
     initializeAnimations();
+    updateUIForMode(); // 添加初始化UI模式设置
 });
+
+// 更新模式UI
+function updateUIForMode() {
+    const detectBtn = document.getElementById('detect-btn');
+    const btnText = detectBtn.querySelector('.btn-text');
+    
+    if (currentDetectionType === 'species') {
+        btnText.textContent = '启动种类识别';
+        detectBtn.style.background = 'linear-gradient(135deg, var(--primary), var(--secondary))';
+    } else {
+        btnText.textContent = '启动成熟度分析';
+        detectBtn.style.background = 'linear-gradient(135deg, var(--accent), var(--warning))';
+    }
+}
 
 // 事件监听器初始化
 function initializeEventListeners() {
@@ -85,7 +100,7 @@ function updateTechStats() {
     const modelInfo = document.querySelector('.model-info');
     if (modelInfo) {
         modelInfo.querySelector('span').textContent = 
-            `Model Accuracy: ${accuracy}% • Inference Speed: ${speed}ms • Training Data: 15K+ Images`;
+            `识别准确率: ${accuracy}% • 处理速度: ${speed}ms • 训练数据: 15K+ 图片`;  // 修改英文术语为中文
     }
 }
 
@@ -176,7 +191,7 @@ function runDetection() {
     
     console.log(`发送请求到: ${apiEndpoint}`);
     
-    showMessage('🔍 AI正在分析图片，请稍候...', 'info');
+    showMessage('🔍 识别中，请稍候...', 'info');  // 修改"视觉识别中"为"识别中"
     
     fetch(apiEndpoint, {
         method: 'POST',
@@ -212,7 +227,7 @@ function runDetection() {
             document.getElementById('detection-count').textContent = detectionCount;
             
             displayDetections(data.detections);
-            showMessage('🎉 AI分析完成！检测结果已生成', 'success');
+            showMessage('🎉 识别完成！检测结果已生成', 'success');  // 修改"视觉识别完成"为"识别完成"
             
             // 添加结果展示动画
             animateResults();
@@ -284,20 +299,6 @@ function animateResults() {
             item.style.transform = 'translateX(0)';
         }, index * 100);
     });
-}
-
-// 更新模式UI
-function updateUIForMode() {
-    const detectBtn = document.getElementById('detect-btn');
-    const btnText = detectBtn.querySelector('.btn-text');
-    
-    if (currentDetectionType === 'species') {
-        btnText.textContent = '启动种类识别';
-        detectBtn.style.background = 'linear-gradient(135deg, var(--primary), var(--secondary))';
-    } else {
-        btnText.textContent = '启动成熟度分析';
-        detectBtn.style.background = 'linear-gradient(135deg, var(--accent), var(--warning))';
-    }
 }
 
 // 消息提示系统

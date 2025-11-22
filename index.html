@@ -61,7 +61,7 @@
                 </div>
                 <div class="status-item">
                     <div class="status-dot"></div>
-                    <span>AI就绪</span>
+                    <span>准备就绪</span>  <!-- 修改"视觉就绪"为"准备就绪" -->
                 </div>
             </div>
 
@@ -125,7 +125,7 @@
 
             <!-- 加载动画 -->
             <div class="loading-section" id="loading">
-                <div class="ai-processing">
+                <div class="visual-processing">  <!-- 修改类名 -->
                     <div class="neural-network">
                         <div class="node"></div>
                         <div class="node"></div>
@@ -133,8 +133,8 @@
                         <div class="node"></div>
                         <div class="node"></div>
                     </div>
-                    <h3>AI正在分析中</h3>
-                    <p>神经网络处理图像数据...</p>
+                    <h3>识别中</h3>  <!-- 修改"AI正在分析中"为"识别中" -->
+                    <p>图像处理中...</p>  <!-- 修改"神经网络处理图像数据..." -->
                     <div class="progress-bar">
                         <div class="progress-fill"></div>
                     </div>
@@ -157,16 +157,34 @@
                     </div>
                 </div>
                 
+                <!-- 删除图片容器中的重复状态指示器 -->
                 <div class="image-container">
-                    <img id="output-image" alt="AI检测结果">
-                    <div class="image-overlay">
+                    <img id="output-image" alt="视觉检测结果">
+                    <!-- 删除以下整个状态指示器块 -->
+                    <!-- <div class="status-indicators">
+                        <div class="status-item active">
+                            <div class="status-dot"></div>
+                            <span>系统在线</span>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-dot"></div>
+                            <span>模型加载</span>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-dot"></div>
+                            <span>视觉就绪</span>
+                        </div>
+                    </div> -->
+                    
+                    <!-- 修改图片悬停提示 -->
+                    <div class="image-overlay" style="display: none;">  <!-- 添加display: none -->
                         <div class="overlay-content">
                             <i class="fas fa-robot"></i>
-                            <span>AI视觉分析完成</span>
+                            <span>视觉分析完成</span>
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="detections-panel" id="detections-container">
                     <div class="panel-header">
                         <h4><i class="fas fa-microscope"></i> 详细检测数据</h4>
