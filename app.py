@@ -114,7 +114,10 @@ def index():
     # 直接渲染 templates/index.html
     # return render_template('index.html')
     return send_file('index.html')
-
+# 添加静态文件路由
+@app.route('/<path:filename>')
+def serve_static(filename):
+    return send_file(filename)
 # 种类检测 API
 @app.route('/detect', methods=['POST'])
 def detect_type():

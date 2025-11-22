@@ -1,0 +1,785 @@
+/* 基础重置和变量定义 */
+:root {
+    --primary: #00f5ff;
+    --primary-glow: #00f5ffaa;
+    --secondary: #9d4edd;
+    --accent: #ff006e;
+    --success: #00ff88;
+    --warning: #ffbe0b;
+    --danger: #ff0055;
+    --dark: #0a0a1a;
+    --darker: #050510;
+    --light: #e2f3f5;
+    --gray: #8b93b0;
+    
+    --neon-glow: 0 0 10px var(--primary-glow),
+                 0 0 20px var(--primary-glow),
+                 0 0 40px var(--primary-glow);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 50%, #1a1a2e 100%);
+    color: var(--light);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* 星空背景动画 */
+.bg-animation {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+
+#stars {
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    box-shadow: 100px 200px #fff, 400px 100px #fff, 800px 300px #fff,
+                200px 500px #fff, 600px 700px #fff, 900px 600px #fff;
+    animation: animStar 50s linear infinite;
+}
+
+#stars:after {
+    content: " ";
+    position: absolute;
+    top: 2000px;
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    box-shadow: 100px 200px #fff, 400px 100px #fff, 800px 300px #fff,
+                200px 500px #fff, 600px 700px #fff, 900px 600px #fff;
+}
+
+#stars2, #stars3 {
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    box-shadow: 150px 250px #fff, 350px 150px #fff, 750px 350px #fff,
+                250px 550px #fff, 650px 750px #fff, 950px 650px #fff;
+    animation: animStar 100s linear infinite;
+}
+
+#stars2:after, #stars3:after {
+    content: " ";
+    position: absolute;
+    top: 2000px;
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    box-shadow: 150px 250px #fff, 350px 150px #fff, 750px 350px #fff,
+                250px 550px #fff, 650px 750px #fff, 950px 650px #fff;
+}
+
+#stars3 {
+    width: 3px;
+    height: 3px;
+    box-shadow: 200px 300px #00f5ff, 500px 200px #00f5ff, 900px 400px #00f5ff,
+                300px 600px #00f5ff, 700px 800px #00f5ff, 1000px 700px #00f5ff;
+    animation: animStar 150s linear infinite;
+}
+
+@keyframes animStar {
+    from { transform: translateY(0px); }
+    to { transform: translateY(-2000px); }
+}
+
+/* 浮动形状 */
+.floating-shapes {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.shape {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    opacity: 0.1;
+    filter: blur(40px);
+    animation: float 20s infinite linear;
+}
+
+.shape-1 { width: 200px; height: 200px; top: 10%; left: 5%; animation-delay: 0s; }
+.shape-2 { width: 300px; height: 300px; top: 60%; right: 10%; animation-delay: -5s; }
+.shape-3 { width: 150px; height: 150px; bottom: 20%; left: 20%; animation-delay: -10s; }
+.shape-4 { width: 250px; height: 250px; top: 30%; right: 20%; animation-delay: -15s; }
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(100px, 50px) rotate(90deg); }
+    50% { transform: translate(50px, 100px) rotate(180deg); }
+    75% { transform: translate(-50px, 50px) rotate(270deg); }
+}
+
+/* 霓虹边框 */
+.neon-border {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    border: 2px solid transparent;
+    background: linear-gradient(45deg, transparent, var(--primary-glow), transparent);
+    background-size: 400% 400%;
+    animation: neonFlow 6s ease-in-out infinite;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: subtract;
+    padding: 2px;
+}
+
+@keyframes neonFlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* 粒子效果容器 */
+#particles-js {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+/* 容器布局 */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+/* 头部样式 */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(10, 10, 26, 0.7);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(0, 245, 255, 0.2);
+    box-shadow: var(--neon-glow);
+    animation: slideDown 1s ease-out;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.logo-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: var(--neon-glow);
+    animation: pulse 2s infinite;
+}
+
+.logo-text h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease infinite;
+}
+
+.tagline {
+    color: var(--gray);
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.tech-stack {
+    display: flex;
+    gap: 10px;
+}
+
+.tech-badge {
+    padding: 8px 16px;
+    background: rgba(0, 245, 255, 0.1);
+    border: 1px solid var(--primary-glow);
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: var(--primary);
+    backdrop-filter: blur(10px);
+    animation: fadeInUp 1s ease-out;
+}
+
+/* 主卡片 */
+.main-card {
+    background: rgba(10, 10, 26, 0.7);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    padding: 40px;
+    border: 1px solid rgba(0, 245, 255, 0.3);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), var(--neon-glow);
+    animation: slideUp 1s ease-out;
+}
+
+/* 状态指示器 */
+.status-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.status-item.active {
+    background: rgba(0, 245, 255, 0.1);
+    border-color: var(--primary-glow);
+    box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--gray);
+    animation: blink 2s infinite;
+}
+
+.status-item.active .status-dot {
+    background: var(--success);
+    box-shadow: 0 0 10px var(--success);
+}
+
+/* 模式选择器 */
+.mode-selector {
+    margin-bottom: 40px;
+}
+
+.mode-tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.mode-tab {
+    position: relative;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid transparent;
+    border-radius: 20px;
+    padding: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.mode-tab::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.mode-tab:hover::before {
+    left: 100%;
+}
+
+.mode-tab.active {
+    background: rgba(0, 245, 255, 0.1);
+    border-color: var(--primary-glow);
+    box-shadow: var(--neon-glow);
+    transform: translateY(-5px);
+}
+
+.tab-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.tab-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: var(--light);
+}
+
+.tab-content p {
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+/* 上传区域 */
+.upload-section {
+    margin-bottom: 30px;
+}
+
+.upload-card {
+    position: relative;
+    border: 3px dashed rgba(0, 245, 255, 0.5);
+    border-radius: 20px;
+    padding: 60px 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.02);
+    overflow: hidden;
+}
+
+.upload-card:hover {
+    border-color: var(--primary);
+    background: rgba(0, 245, 255, 0.05);
+    transform: scale(1.02);
+}
+
+.upload-card.dragover {
+    border-color: var(--primary);
+    background: rgba(0, 245, 255, 0.1);
+    box-shadow: var(--neon-glow);
+}
+
+.upload-icon {
+    position: relative;
+    font-size: 4rem;
+    margin-bottom: 20px;
+    color: var(--primary);
+}
+
+.pulse-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    border: 2px solid var(--primary);
+    border-radius: 50%;
+    animation: pulseRing 2s infinite;
+}
+
+.file-types {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.file-type {
+    padding: 5px 15px;
+    background: rgba(0, 245, 255, 0.1);
+    border-radius: 15px;
+    font-size: 0.8rem;
+    color: var(--primary);
+}
+
+.scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    animation: scan 3s linear infinite;
+}
+
+/* 控制按钮 */
+.control-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.detect-btn {
+    position: relative;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border: none;
+    padding: 20px 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 245, 255, 0.3);
+}
+
+.detect-btn:hover:not(:disabled) {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(0, 245, 255, 0.5), var(--neon-glow);
+}
+
+.detect-btn:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.detect-btn:disabled {
+    background: var(--gray);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s;
+}
+
+.detect-btn:hover .btn-shine {
+    left: 100%;
+}
+
+/* 加载动画 */
+.loading-section {
+    display: none;
+    text-align: center;
+    margin: 40px 0;
+}
+
+.ai-processing {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.neural-network {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+    height: 100px;
+}
+
+.node {
+    width: 20px;
+    height: 20px;
+    background: var(--primary);
+    border-radius: 50%;
+    animation: nodePulse 1.5s infinite ease-in-out;
+    box-shadow: 0 0 20px var(--primary);
+}
+
+.node:nth-child(2) { animation-delay: 0.2s; }
+.node:nth-child(3) { animation-delay: 0.4s; }
+.node:nth-child(4) { animation-delay: 0.6s; }
+.node:nth-child(5) { animation-delay: 0.8s; }
+
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 3px;
+    animation: progressLoad 2s infinite ease-in-out;
+}
+
+/* 结果区域 */
+.result-section {
+    display: none;
+    animation: fadeIn 1s ease-out;
+}
+
+.result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.result-stats {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(0, 245, 255, 0.1);
+    border-radius: 10px;
+    font-size: 0.9rem;
+}
+
+.image-container {
+    position: relative;
+    margin-bottom: 30px;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+}
+
+#output-image {
+    width: 100%;
+    max-height: 600px;
+    object-fit: contain;
+    display: none;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(10, 10, 26, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.image-container:hover .image-overlay {
+    opacity: 1;
+}
+
+.overlay-content {
+    text-align: center;
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+
+/* 检测面板 */
+.detections-panel {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.export-btn {
+    background: rgba(0, 245, 255, 0.1);
+    color: var(--primary);
+    border: 1px solid var(--primary-glow);
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.export-btn:hover {
+    background: var(--primary);
+    color: var(--dark);
+    box-shadow: var(--neon-glow);
+}
+
+.detections-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.detection-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    border-left: 4px solid var(--primary);
+    transition: all 0.3s ease;
+}
+
+.detection-item:hover {
+    background: rgba(0, 245, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.confidence-bar {
+    width: 150px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.confidence-level {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--success));
+    border-radius: 4px;
+    position: relative;
+    box-shadow: 0 0 10px var(--primary-glow);
+}
+
+/* 底部信息 */
+.footer {
+    margin-top: 40px;
+    text-align: center;
+    padding: 20px;
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* 动画关键帧 */
+@keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.3; }
+}
+
+@keyframes pulseRing {
+    0% { transform: translate(-50%, -50%) scale(0.8); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
+}
+
+@keyframes scan {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(100%); }
+}
+
+@keyframes nodePulse {
+    0%, 100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.5); opacity: 1; }
+}
+
+@keyframes progressLoad {
+    0% { transform: translateX(-100%); }
+    50% { transform: translateX(0); }
+    100% { transform: translateX(100%); }
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* 消息提示样式 */
+.message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    z-index: 10000;
+    animation: slideInRight 0.5s ease, slideOutRight 0.5s ease 3.5s;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOutRight {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+    }
+    
+    .mode-tabs {
+        grid-template-columns: 1fr;
+    }
+    
+    .result-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .logo-text h1 {
+        font-size: 2rem;
+    }
+    
+    .main-card {
+        padding: 20px;
+    }
+    
+    .status-indicators {
+        flex-direction: column;
+        gap: 15px;
+    }
+}
