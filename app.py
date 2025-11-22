@@ -1,5 +1,5 @@
 # app.py
-from flask import Flask, request, jsonify, send_file, render_template
+from flask import Flask, request, jsonify, send_file, render_template, send_from_directory
 import cv2
 import numpy as np
 import os
@@ -7,23 +7,25 @@ from werkzeug.utils import secure_filename
 from PIL import Image
 from ultralytics import YOLO
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', static_url_path='/static')
 
 # === 配置 ===
 UPLOAD_FOLDER = 'uploads'
 PROCESSED_FOLDER = 'processed'
+STATIC_FOLDER = 'static'
 
 # 确保目录存在
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(PROCESSED_FOLDER, exist_ok=True)
+os.makedirs('static/css', exist_ok=True)
+os.makedirs('static/js', exist_ok=True)
 
 # 允许的文件扩展名
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 # === 模型路径配置 ===
-# 请确保这些路径下真实存在模型文件
-MODEL_PATH_TYPE = 'model/type/best.pt'          # 种类检测
-MODEL_PATH_MATURITY = 'model/maturity/best.pt'  # 成熟度检测
+MODEL_PATH_TYPE = 'model/type/best.pt'
+MODEL_PATH_MATURITY = 'model/maturity/best.pt'
 
 # 全局变量存储模型
 model_type = None
@@ -105,8 +107,7 @@ def process_image(image_path, model):
 
 @app.route('/')
 def index():
-    # 直接渲染 templates/index.html
-    return render_template('index.html')
+    return send_file('index.html')
 
 # 种类检测 API
 @app.route('/detect', methods=['POST'])
@@ -118,7 +119,7 @@ def detect_type():
 def detect_maturity():
     return handle_detection(request, model_maturity, "成熟度检测")
 
-# 通用检测处理函数（避免代码重复）
+# 通用检测处理函数
 def handle_detection(req, model, task_name):
     if 'image' not in req.files:
         return jsonify({'error': '没有上传图片'}), 400
@@ -141,7 +142,6 @@ def handle_detection(req, model, task_name):
             return jsonify({
                 'success': True,
                 'detections': detections,
-                # 返回前端可访问的图片URL
                 'processed_image': f'/processed/{filename}'
             })
         except Exception as e:
@@ -154,6 +154,18 @@ def handle_detection(req, model, task_name):
 @app.route('/processed/<filename>')
 def get_processed_image(filename):
     return send_file(os.path.join(PROCESSED_FOLDER, filename))
+
+# 系统状态检查
+@app.route('/api/status')
+def system_status():
+    return jsonify({
+        'status': 'running',
+        'models': {
+            'type': model_type is not None,
+            'maturity': model_maturity is not None
+        },
+        'version': '2.1.0'
+    })
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>羊肚菌智能检测系统 - AI视觉分析平台</title>
+    <!-- 修复路径：使用正斜杠 -->
+    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="static/css/animations.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- 粒子背景 -->
+    <div id="particles-js"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-mushroom"></i>
+                <span>羊肚菌AI检测平台</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="nav-link active" data-section="home">首页</a>
+                <a href="#" class="nav-link" data-section="detect">智能检测</a>
+                <a href="#" class="nav-link" data-section="analytics">数据分析</a>
+                <a href="#" class="nav-link" data-section="about">关于系统</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区域 -->
+    <main class="main-content">
+        <!-- 首页部分 -->
+        <section id="home-section" class="section active">
+            <div class="hero">
+                <div class="hero-content">
+                    <h1 class="hero-title">
+                        <span class="title-main">羊肚菌智能检测系统</span>
+                        <span class="title-sub">基于深度学习的多模态AI分析平台</span>
+                    </h1>
+                    <p class="hero-description">
+                        融合YOLOv8深度学习算法与计算机视觉技术，提供精准的羊肚菌种类识别、成熟度分析、品质评估等一站式解决方案
+                    </p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <div class="stat-number" data-target="99.2">0</div>
+                            <div class="stat-label">识别准确率</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" data-target="15">0</div>
+                            <div class="stat-label">毫秒响应</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" data-target="50">0</div>
+                            <div class="stat-label">+特征维度</div>
+                        </div>
+                    </div>
+                    <button class="cta-button" id="start-detection">
+                        <i class="fas fa-play"></i>
+                        开始智能检测
+                    </button>
+                </div>
+                <div class="hero-visual">
+                    <div class="floating-cards">
+                        <div class="card floating-card-1">
+                            <i class="fas fa-brain"></i>
+                            <h4>深度学习</h4>
+                        </div>
+                        <div class="card floating-card-2">
+                            <i class="fas fa-camera"></i>
+                            <h4>视觉分析</h4>
+                        </div>
+                        <div class="card floating-card-3">
+                            <i class="fas fa-chart-line"></i>
+                            <h4>实时分析</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 检测部分 -->
+        <section id="detect-section" class="section">
+            <!-- 检测界面内容将由JS动态加载 -->
+        </section>
+
+        <!-- 数据分析部分 -->
+        <section id="analytics-section" class="section">
+            <!-- 分析界面内容将由JS动态加载 -->
+        </section>
+
+        <!-- 关于部分 -->
+        <section id="about-section" class="section">
+            <!-- 关于界面内容将由JS动态加载 -->
+        </section>
+    </main>
+
+    <!-- 全局加载遮罩 -->
+    <div id="global-loader" class="global-loader">
+        <div class="loader-content">
+            <div class="ai-loader">
+                <div class="ai-core"></div>
+                <div class="ai-ring"></div>
+                <div class="ai-particle"></div>
+            </div>
+            <p>AI系统初始化中...</p>
+        </div>
+    </div>
+
+    <!-- 脚本引入 -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <!-- 预先加载Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="static/js/config.js"></script>
+    <script src="static/js/utils.js"></script>
+    <script src="static/js/animations.js"></script>
+    <script src="static/js/detectModule.js"></script>
+    <script src="static/js/analyticsModule.js"></script>
+    <script src="static/js/aboutModule.js"></script>
+    <script src="static/js/app.js"></script>
+</body>
+</html>
