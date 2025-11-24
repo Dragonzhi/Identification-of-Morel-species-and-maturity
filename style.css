@@ -914,3 +914,72 @@ body {
 .history-btn:hover {
     background: rgba(255, 255, 255, 0.1);
 }
+
+/* 2. 为关闭按钮添加CSS样式 */
+/* 添加历史记录详情关闭按钮样式 */
+.close-detail {
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    color: var(--gray);
+    font-size: 1.2rem;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.close-detail:hover {
+    background: rgba(255, 0, 0, 0.2);
+    color: var(--danger);
+}
+
+/* 修复历史记录详情头部布局 */
+.history-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.history-detail-content {
+    display: flex;
+    gap: 20px;
+}
+
+.history-image-container img {
+    max-width: 300px;  /* 设置最大宽度 */
+    max-height: 300px; /* 设置最大高度 */
+    width: auto;       /* 保持宽高比 */
+    height: auto;      /* 保持宽高比 */
+    border-radius: 10px;
+    object-fit: contain; /* 确保图片完整显示 */
+}
+
+/* 修改控制部分样式以容纳两个按钮 */
+.control-section {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.history-btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--light);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 24px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.history-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}

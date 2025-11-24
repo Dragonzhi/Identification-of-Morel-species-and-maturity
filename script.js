@@ -181,7 +181,8 @@ function displayHistory(history) {
                     <span class="history-date">${item.timestamp}</span>
                 </div>
                 <div class="history-actions">
-                    <span class="history-count">${item.detections} 个结果</span>
+                    <span class="history-count">${item.detection_count || item.detections.length} 个结果</span>
+                    
                     <i class="fas fa-chevron-right"></i>
                 </div>
             </div>
