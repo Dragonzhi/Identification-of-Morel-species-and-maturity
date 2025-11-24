@@ -882,8 +882,12 @@ body {
 }
 
 .history-image-container img {
-    max-width: 100%;
+    max-width: 300px;  /* 设置最大宽度 */
+    max-height: 300px; /* 设置最大高度 */
+    width: auto;       /* 保持宽高比 */
+    height: auto;      /* 保持宽高比 */
     border-radius: 10px;
+    object-fit: contain; /* 确保图片完整显示 */
 }
 
 /* 修改控制部分样式以容纳两个按钮 */

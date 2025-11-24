@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeEventListeners();
     initializeAnimations();
     updateUIForMode(); // 添加初始化UI模式设置
+    updateStatusIndicators(); // 添加状态指示器更新
 });
 
 // 更新模式UI
@@ -12,10 +13,10 @@ function updateUIForMode() {
     const btnText = detectBtn.querySelector('.btn-text');
     
     if (currentDetectionType === 'species') {
-        btnText.textContent = '启动种类识别';
+        btnText.textContent = '种类识别';  // 修改按钮文本
         detectBtn.style.background = 'linear-gradient(135deg, var(--primary), var(--secondary))';
     } else {
-        btnText.textContent = '启动成熟度分析';
+        btnText.textContent = '成熟度分析';  // 修改按钮文本
         detectBtn.style.background = 'linear-gradient(135deg, var(--accent), var(--warning))';
     }
 }
@@ -96,10 +97,14 @@ function initializeEventListeners() {
 function showHistoryPage() {
     const historySection = document.getElementById('history');
     const mainCard = document.querySelector('.main-card');
+    const resultSection = document.getElementById('result');  // 获取结果区域
     
     if (historySection && mainCard) {
         mainCard.style.display = 'none';
         historySection.style.display = 'block';
+        if (resultSection) {
+            resultSection.style.display = 'none';  // 隐藏检测分析报告
+        }
         loadHistory(); // 加载历史记录
     }
 }
