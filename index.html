@@ -113,6 +113,7 @@
             </div>
 
             <!-- 控制按钮 -->
+            <!-- 修改控制按钮区域 -->
             <div class="control-section">
                 <button class="detect-btn" id="detect-btn" disabled>
                     <span class="btn-text">启动AI分析</span>
@@ -121,6 +122,12 @@
                     </span>
                     <div class="btn-shine"></div>
                 </button>
+                <button class="history-btn" id="history-btn">
+                    <span class="btn-text">历史记录</span>
+                    <span class="btn-icon">
+                        <i class="fas fa-history"></i>
+                    </span>
+                </div>
             </div>
 
             <!-- 加载动画 -->
@@ -216,5 +223,36 @@
     <!-- 引入JS文件 -->
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="script.js"></script>
+
+    <!-- 在主卡片后添加历史记录页面 -->
+    <div class="history-section" id="history">
+        <div class="history-header">
+            <h3><i class="fas fa-history"></i> 历史识别记录</h3>
+            <button class="back-btn" id="back-btn">
+                <i class="fas fa-arrow-left"></i> 返回检测
+            </button>
+        </div>
+        
+        <div class="history-filters">
+            <select id="history-type-filter">
+                <option value="all">所有记录</option>
+                <option value="species">种类识别</option>
+                <option value="maturity">成熟度检测</option>
+            </select>
+            <div class="date-filter">
+                <input type="date" id="start-date">
+                <span>至</span>
+                <input type="date" id="end-date">
+            </div>
+        </div>
+        
+        <div class="history-list" id="history-list">
+            <!-- 历史记录将动态加载 -->
+        </div>
+        
+        <div class="history-detail" id="history-detail">
+            <!-- 历史记录详情将动态加载 -->
+        </div>
+    </div>
 </body>
 </html>

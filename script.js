@@ -70,27 +70,199 @@ function initializeEventListeners() {
     detectBtn.addEventListener('click', runDetection);
     
     console.log('事件监听器初始化完成');
+    
+    // 历史记录按钮事件
+    const historyBtn = document.getElementById('history-btn');
+    const backBtn = document.getElementById('back-btn');
+    const historySection = document.getElementById('history');
+    const mainCard = document.querySelector('.main-card');
+    
+    if (historyBtn) {
+        historyBtn.addEventListener('click', showHistoryPage);
+    }
+    
+    if (backBtn) {
+        backBtn.addEventListener('click', showMainPage);
+    }
+    
+    // 历史记录筛选器事件
+    const typeFilter = document.getElementById('history-type-filter');
+    if (typeFilter) {
+        typeFilter.addEventListener('change', loadHistory);
+    }
 }
 
-// 初始化动画
-function initializeAnimations() {
-    console.log('启动动画效果...');
+// 显示历史记录页面
+function showHistoryPage() {
+    const historySection = document.getElementById('history');
+    const mainCard = document.querySelector('.main-card');
     
-    // 状态指示器动画
-    const statusItems = document.querySelectorAll('.status-item');
-    let delay = 0;
-    statusItems.forEach((item, index) => {
-        setTimeout(() => {
-            item.classList.add('active');
-            console.log(`状态指示器 ${index + 1} 激活`);
-        }, delay);
-        delay += 1000;
+    if (historySection && mainCard) {
+        mainCard.style.display = 'none';
+        historySection.style.display = 'block';
+        loadHistory(); // 加载历史记录
+    }
+}
+
+// 显示主页面
+function showMainPage() {
+    const historySection = document.getElementById('history');
+    const mainCard = document.querySelector('.main-card');
+    const historyDetail = document.getElementById('history-detail');
+    
+    if (historySection && mainCard) {
+        historySection.style.display = 'none';
+        mainCard.style.display = 'block';
+        
+        // 隐藏历史详情
+        if (historyDetail) {
+            historyDetail.style.display = 'none';
+        }
+    }
+}
+
+// 加载历史记录
+function loadHistory() {
+    const historyList = document.getElementById('history-list');
+    const typeFilter = document.getElementById('history-type-filter');
+    const selectedType = typeFilter ? typeFilter.value : 'all';
+    
+    if (!historyList) return;
+    
+    // 显示加载状态
+    historyList.innerHTML = '<div class="loading">加载历史记录中...</div>';
+    
+    // 从后端获取历史记录
+    fetch('/history')
+        .then(response => {
+            if (!response.ok) throw new Error('无法获取历史记录');
+            return response.json();
+        })
+        .then(data => {
+            if (data.success && data.history) {
+                // 应用筛选器
+                let filteredHistory = data.history;
+                if (selectedType !== 'all') {
+                    filteredHistory = data.history.filter(item => item.type === selectedType);
+                }
+                displayHistory(filteredHistory);
+            } else {
+                historyList.innerHTML = '<div class="no-history">暂无历史记录</div>';
+            }
+        })
+        .catch(error => {
+            console.error('加载历史记录失败:', error);
+            historyList.innerHTML = '<div class="error">加载历史记录失败，请重试</div>';
+        });
+}
+
+// 显示历史记录列表
+function displayHistory(history) {
+    const historyList = document.getElementById('history-list');
+    if (!historyList) return;
+    
+    if (!history || history.length === 0) {
+        historyList.innerHTML = '<div class="no-history">暂无符合条件的历史记录</div>';
+        return;
+    }
+    
+    let html = '';
+    history.forEach(item => {
+        html += `
+            <div class="history-item" data-id="${item.id}">
+                <div class="history-info">
+                    <span class="history-type ${item.type}">${item.type === 'species' ? '种类识别' : '成熟度检测'}</span>
+                    <span class="history-filename">${item.filename}</span>
+                    <span class="history-date">${item.timestamp}</span>
+                </div>
+                <div class="history-actions">
+                    <span class="history-count">${item.detections} 个结果</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        `;
     });
     
-    // 随机技术指标更新
-    setInterval(updateTechStats, 5000);
+    historyList.innerHTML = html;
     
-    console.log('动画初始化完成');
+    // 添加点击事件以查看详情
+    document.querySelectorAll('.history-item').forEach(item => {
+        item.addEventListener('click', () => {
+            loadHistoryDetail(item.getAttribute('data-id'));
+        });
+    });
+}
+
+// 加载并显示历史记录详情
+function loadHistoryDetail(id) {
+    const historyDetail = document.getElementById('history-detail');
+    if (!historyDetail) return;
+    
+    historyDetail.style.display = 'block';
+    historyDetail.innerHTML = '<div class="loading">加载详情中...</div>';
+    
+    fetch(`/history/${id}`)
+        .then(response => {
+            if (!response.ok) throw new Error('无法获取记录详情');
+            return response.json();
+        })
+        .then(data => {
+            if (data.success && data.detail) {
+                // 构建详情HTML
+                let detectionsHtml = '';
+                data.detail.detections.forEach(det => {
+                    const confidencePercent = Math.round(det.confidence * 100);
+                    const confidenceColor = confidencePercent > 80 ? 'var(--success)' : 
+                                          confidencePercent > 60 ? 'var(--warning)' : 'var(--danger)';
+                    
+                    detectionsHtml += `
+                        <div class="detection-item">
+                            <div class="detection-info">
+                                <h4>${det.class}</h4>
+                                <span class="confidence-text">置信度: ${confidencePercent}%</span>
+                            </div>
+                            <div class="confidence-visual">
+                                <div class="confidence-bar">
+                                    <div class="confidence-level" style="width: ${confidencePercent}%; background: ${confidenceColor};"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                historyDetail.innerHTML = `
+                    <div class="history-detail-header">
+                        <h4>检测详情</h4>
+                        <button class="close-detail" onclick="document.getElementById('history-detail').style.display='none'">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="history-detail-content">
+                        <div class="history-image-container">
+                            <img src="${data.detail.processed_image}" alt="检测结果图">
+                        </div>
+                        <div class="history-results">
+                            <div class="history-meta">
+                                <p><strong>文件名:</strong> ${data.detail.filename}</p>
+                                <p><strong>检测类型:</strong> ${data.detail.type === 'species' ? '种类识别' : '成熟度检测'}</p>
+                                <p><strong>检测时间:</strong> ${data.detail.timestamp}</p>
+                                <p><strong>处理耗时:</strong> ${data.detail.process_time}</p>
+                            </div>
+                            <div class="history-detections">
+                                <h5>检测结果:</h5>
+                                ${detectionsHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                historyDetail.innerHTML = '<div class="error">无法加载记录详情</div>';
+            }
+        })
+        .catch(error => {
+            console.error('加载详情失败:', error);
+            historyDetail.innerHTML = '<div class="error">加载详情失败，请重试</div>';
+        });
 }
 
 // 技术统计更新

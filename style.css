@@ -783,3 +783,130 @@ body {
         gap: 15px;
     }
 }
+
+/* 历史记录页面样式 */
+.history-section {
+    display: none;
+    animation: fadeIn 1s ease-out;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.back-btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--gray);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.history-filters {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+}
+
+.history-filters select, .history-filters input {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--light);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 12px;
+    border-radius: 8px;
+}
+
+.history-list {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.history-item:hover {
+    background: rgba(0, 245, 255, 0.1);
+}
+
+.history-type {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+}
+
+.history-type.species {
+    background: rgba(0, 245, 255, 0.1);
+    color: var(--primary);
+}
+
+.history-type.maturity {
+    background: rgba(255, 165, 0, 0.1);
+    color: var(--warning);
+}
+
+.history-detail {
+    display: none;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.history-detail-content {
+    display: flex;
+    gap: 20px;
+}
+
+.history-image-container img {
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+/* 修改控制部分样式以容纳两个按钮 */
+.control-section {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.history-btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--light);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px 24px;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.history-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}

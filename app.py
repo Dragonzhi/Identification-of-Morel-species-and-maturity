@@ -129,6 +129,7 @@ def detect_maturity():
     return handle_detection(request, model_maturity, "成熟度检测")
 
 # 通用检测处理函数（避免代码重复）
+# === 修改：更新handle_detection函数，添加数据库记录 ===
 def handle_detection(req, model, task_name):
     if 'image' not in req.files:
         return jsonify({'error': '没有上传图片'}), 400
@@ -146,14 +147,33 @@ def handle_detection(req, model, task_name):
             if model is None:
                 return jsonify({'error': f'{task_name}模型未加载，请检查服务器配置'}), 500
                 
+            # 记录处理开始时间
+            start_time = datetime.now()
+            
             processed_path, detections = process_image(filepath, model)
+            
+            # 计算处理耗时
+            process_time = (datetime.now() - start_time).total_seconds()
+            
+            # === 新增：保存记录到数据库 ===
+            history_record = DetectionHistory(
+                type='species' if task_name == '种类检测' else 'maturity',
+                filename=filename,
+                original_path=filepath,
+                processed_path=processed_path,
+                detections=json.dumps(detections),
+                process_time=process_time
+            )
+            db.session.add(history_record)
+            db.session.commit()
             
             return jsonify({
                 'success': True,
                 'detections': detections,
-                # 返回前端可访问的图片URL
-                'processed_image': f'/processed/{filename}'
+                'processed_image': f'/processed/{filename}',
+                'history_id': history_record.id  # 返回新记录ID
             })
+            
         except Exception as e:
             print(f"Error in {task_name}: {e}")
             return jsonify({'error': str(e)}), 500
@@ -161,9 +181,143 @@ def handle_detection(req, model, task_name):
     return jsonify({'error': '文件类型不支持'}), 400
 
 # 图片服务路由
+# 修改图片服务路由，添加错误处理
 @app.route('/processed/<filename>')
 def get_processed_image(filename):
-    return send_file(os.path.join(PROCESSED_FOLDER, filename))
+    try:
+        # 尝试打开请求的图片
+        return send_file(os.path.join(PROCESSED_FOLDER, filename))
+    except FileNotFoundError:
+        # 如果文件不存在，返回默认图片或占位符
+        # 确保在processed文件夹中放置一张default.jpg作为默认图片
+        default_path = os.path.join(PROCESSED_FOLDER, 'default.jpg')
+        if os.path.exists(default_path):
+            return send_file(default_path)
+        return jsonify({'error': '图片不存在'}), 404
 
+# 添加历史记录API端点
+# === 修改：更新历史记录API ===
+@app.route('/history', methods=['GET'])
+def get_history():
+    # 获取查询参数：类型筛选
+    type_filter = request.args.get('type', 'all')
+    
+    # 查询数据库
+    query = DetectionHistory.query.order_by(DetectionHistory.timestamp.desc())
+    
+    # 应用筛选条件
+    if type_filter != 'all':
+        query = query.filter(DetectionHistory.type == type_filter)
+    
+    # 获取分页数据（每页10条）
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+    pagination = query.paginate(page=page, per_page=per_page)
+    history_records = pagination.items
+    
+    # 转换为API响应格式
+    return jsonify({
+        'success': True,
+        'history': [record.to_dict() for record in history_records],
+        'pagination': {
+            'total': pagination.total,
+            'pages': pagination.pages,
+            'current_page': page,
+            'per_page': per_page
+        }
+    })
+
+@app.route('/history/<int:record_id>', methods=['GET'])
+def get_history_detail(record_id):
+    # 从数据库查询记录
+    record = DetectionHistory.query.get(record_id)
+    
+    if not record:
+        return jsonify({'error': '记录不存在'}), 404
+        
+    return jsonify({
+        'success': True,
+        'detail': record.to_detail_dict()
+    })
+
+# 添加favicon.ico处理
+@app.route('/favicon.ico')
+def favicon():
+    # 可以放置一个默认图标或返回空响应
+    return '', 204  # 返回204 No Content避免错误日志
+
+# === 新增：数据库配置 ===
+# 在文件顶部，app初始化之后添加
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///detection_history.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# === 新增：数据库初始化函数 ===
+def init_database():
+    """初始化数据库，创建所有表"""
+    with app.app_context():
+        db.create_all()
+        print("数据库初始化完成，表已创建")
+
+
+# === 新增：导入数据库相关模块 ===
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+import json
+
+# === 初始化数据库 ===
+db = SQLAlchemy(app)
+
+# === 新增：数据库配置 ===
+# 在app初始化之后添加
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///detection_history.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# === 新增：数据库初始化函数 ===
+def init_database():
+    """初始化数据库，创建所有表"""
+    with app.app_context():
+        db.create_all()
+        print("数据库初始化完成，表已创建")
+
+# === 数据库模型 ===
+class DetectionHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    type = db.Column(db.String(20), nullable=False)  # 'species' 或 'maturity'
+    filename = db.Column(db.String(100), nullable=False)
+    original_path = db.Column(db.String(200), nullable=False)
+    processed_path = db.Column(db.String(200), nullable=False)
+    detections = db.Column(db.Text, nullable=False)  # 存储JSON格式的检测结果
+    process_time = db.Column(db.Float, nullable=True)  # 处理耗时（秒）
+
+    def to_dict(self):
+        """转换为字典，用于API返回"""
+        return {
+            'id': self.id,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'type': self.type,
+            'filename': self.filename,
+            'detections': json.loads(self.detections),
+            'processed_image': f'/processed/{self.filename}',
+            'detection_count': len(json.loads(self.detections))
+        }
+
+    def to_detail_dict(self):
+        """转换为详细信息字典"""
+        return {
+            'id': self.id,
+            'timestamp': self.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+            'type': self.type,
+            'filename': self.filename,
+            'process_time': f"{self.process_time:.2f}s" if self.process_time else "N/A",
+            'detections': json.loads(self.detections),
+            'processed_image': f'/processed/{self.filename}'
+        }
+    
+
+
+# === 修改：在应用启动时初始化数据库 ===
 if __name__ == '__main__':
+    init_database()  # 初始化数据库
     app.run(debug=True, host='0.0.0.0', port=5000)
+
