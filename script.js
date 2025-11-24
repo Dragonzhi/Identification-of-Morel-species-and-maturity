@@ -550,24 +550,39 @@ document.getElementById('file-input').addEventListener('change', function(e) {
 
 // 确保状态更新时启用按钮
 function updateStatusIndicators() {
+    // 确保DOM元素存在
     const statusItems = document.querySelectorAll('.status-item');
-    const detectBtn = document.getElementById('detect-btn');
+    if (!statusItems.length) {
+        console.error('未找到状态指示器元素');
+        return;
+    }
     
-    // 假设系统启动流程：系统在线 -> 模型加载 -> 准备就绪
-    statusItems[0].classList.add('active'); // 系统在线
+    // 系统在线 - 立即激活
+    const systemItem = document.querySelector('[data-status="system"]') || statusItems[0];
+    systemItem.classList.add('active');
     
-    // 模拟模型加载延迟
+    // 模型加载 - 延迟1秒激活
     setTimeout(() => {
-        statusItems[1].classList.add('active'); // 模型加载
+        const modelItem = document.querySelector('[data-status="models"]') || statusItems[1];
+        modelItem.classList.add('active');
         
-        // 模拟准备就绪延迟
+        // 准备就绪 - 再延迟1.5秒激活
         setTimeout(() => {
-            statusItems[2].classList.add('active'); // 准备就绪
-            // 系统就绪后启用按钮
+            const readyItem = document.querySelector('[data-status="ready"]') || statusItems[2];
+            readyItem.classList.add('active');
+            
+            // 激活检测按钮
+            const detectBtn = document.getElementById('detect-btn');
             if (detectBtn) {
                 detectBtn.disabled = false;
-                detectBtn.classList.add('enabled'); // 添加启用状态样式
+                detectBtn.classList.add('enabled');
             }
-        }, 1000);
+        }, 1500);
     }, 1000);
 }
+// 确保在DOM加载完成后调用
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('页面加载完成，初始化状态指示器...');
+    updateStatusIndicators(); // 确保调用状态更新函数
+    // 其他初始化代码...
+});

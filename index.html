@@ -50,18 +50,22 @@
         <!-- 主卡片 -->
         <div class="main-card">
             <!-- 状态指示器 -->
+            <!-- 状态指示器区域 -->
             <div class="status-indicators">
-                <div class="status-item active">
-                    <div class="status-dot"></div>
-                    <span>系统在线</span>
+                <div class="status-item" id="status-online" data-status="system">
+                    <i class="fas fa-server"></i>
+                    <span class="status-text">系统在线</span>
+                    <span class="status-dot"></span>
                 </div>
-                <div class="status-item">
-                    <div class="status-dot"></div>
-                    <span>模型加载</span>
+                <div class="status-item" id="status-models" data-status="models">
+                    <i class="fas fa-brain"></i>
+                    <span class="status-text">模型加载</span>
+                    <span class="status-dot"></span>
                 </div>
-                <div class="status-item">
-                    <div class="status-dot"></div>
-                    <span>准备就绪</span>  <!-- 修改"视觉就绪"为"准备就绪" -->
+                <div class="status-item" id="status-ready" data-status="ready">
+                    <i class="fas fa-check-circle"></i>
+                    <span class="status-text">准备就绪</span>
+                    <span class="status-dot"></span>
                 </div>
             </div>
 
