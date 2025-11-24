@@ -5,6 +5,14 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeAnimations();
     updateUIForMode(); // 添加初始化UI模式设置
     updateStatusIndicators(); // 添加状态指示器更新
+    
+    // 确保按钮初始状态正确
+    const detectBtn = document.getElementById('detect-btn');
+    if (detectBtn) {
+        const btnText = detectBtn.querySelector('.btn-text') || detectBtn;
+        // 强制设置初始文本，防止HTML默认文本影响
+        btnText.textContent = '种类识别';
+    }
 });
 
 // 更新模式UI
@@ -539,3 +547,27 @@ document.getElementById('file-input').addEventListener('change', function(e) {
 // document.getElementById('upload-area').addEventListener('click', function() {
 //     document.getElementById('file-input').click();
 // });
+
+// 确保状态更新时启用按钮
+function updateStatusIndicators() {
+    const statusItems = document.querySelectorAll('.status-item');
+    const detectBtn = document.getElementById('detect-btn');
+    
+    // 假设系统启动流程：系统在线 -> 模型加载 -> 准备就绪
+    statusItems[0].classList.add('active'); // 系统在线
+    
+    // 模拟模型加载延迟
+    setTimeout(() => {
+        statusItems[1].classList.add('active'); // 模型加载
+        
+        // 模拟准备就绪延迟
+        setTimeout(() => {
+            statusItems[2].classList.add('active'); // 准备就绪
+            // 系统就绪后启用按钮
+            if (detectBtn) {
+                detectBtn.disabled = false;
+                detectBtn.classList.add('enabled'); // 添加启用状态样式
+            }
+        }, 1000);
+    }, 1000);
+}
