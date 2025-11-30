@@ -258,14 +258,6 @@ def favicon():
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///detection_history.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# === 新增：数据库初始化函数 ===
-def init_database():
-    """初始化数据库，创建所有表"""
-    with app.app_context():
-        db.create_all()
-        print("数据库初始化完成，表已创建")
-
-
 # === 新增：导入数据库相关模块 ===
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
