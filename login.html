@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 羊肚菌智能检测系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 炫酷背景 -->
+    <div class="bg-animation">
+        <div id="stars"></div>
+        <div id="stars2"></div>
+        <div id="stars3"></div>
+        <div class="floating-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+            <div class="shape shape-4"></div>
+        </div>
+    </div>
+    <div id="particles-js"></div>
+    <div class="neon-border"></div>
+
+    <div class="container">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <div class="logo">
+                        <div class="logo-icon"><i class="fas fa-brain"></i></div>
+                        <h1>系统登录</h1>
+                    </div>
+                    <p class="tagline">欢迎使用羊肚菌智能检测系统</p>
+                </div>
+                
+                <form class="login-form">
+                    <div class="form-group">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="username" placeholder="请输入用户名" value="admin">
+                    </div>
+                    <div class="form-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" placeholder="请输入密码" value="password">
+                    </div>
+                    <div class="form-options">
+                        <label><input type="checkbox" checked> 记住我</label>
+                        <a href="#">忘记密码?</a>
+                    </div>
+                    <button type="button" class="login-btn" onclick="window.location.href='/detect_page'">
+                        <span class="btn-text">登 录</span>
+                        <span class="btn-icon"><i class="fas fa-arrow-right"></i></span>
+                        <div class="btn-shine"></div>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="script.js"></script> <!-- 沿用部分动画脚本 -->
+</body>
+</html>

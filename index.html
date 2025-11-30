@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>羊肚菌智能检测系统 | AI视觉分析平台</title>
+    <title>羊肚菌智能检测系统 | 视觉分析平台</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -27,26 +27,29 @@
     <!-- 霓虹边框 -->
     <div class="neon-border"></div>
 
-    <div class="container">
-        <!-- 头部区域 -->
-        <header class="header">
-            <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-brain"></i>
-                </div>
+    <!-- 统一导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/detect_page" class="nav-logo">
+                <div class="logo-icon"><i class="fas fa-brain"></i></div>
                 <div class="logo-text">
                     <h1>羊肚菌智能检测系统</h1>
                     <span class="tagline">Smart-Powered Morel Mushroom Analysis</span>
                 </div>
+            </a>
+            <div class="nav-links">
+                <a href="/detect_page" class="nav-link active"><i class="fas fa-laptop-code"></i> 检测中心</a>
+                <a href="/about" class="nav-link"><i class="fas fa-info-circle"></i> 关于我们</a>
             </div>
-            
-            <div class="tech-stack">
-                <span class="tech-badge">YOLOv11n</span>
-                <span class="tech-badge">Deep Learning</span>
-                <span class="tech-badge">Computer Vision</span>
+            <div class="nav-user">
+                <a href="/" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> 退出登录
+                </a>
             </div>
-        </header>
+        </div>
+    </nav>
 
+    <div class="container main-container">
         <!-- 主卡片 -->
         <div class="main-card">
             <!-- 状态指示器 -->

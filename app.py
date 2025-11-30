@@ -110,10 +110,17 @@ def process_image(image_path, model):
 # === 路由定义 ===
 
 @app.route('/')
+def login_page():
+    return send_file('login.html')
+
+@app.route('/detect_page')
 def index():
-    # 直接渲染 templates/index.html
-    # return render_template('index.html')
+    # 渲染主检测页面
     return send_file('index.html')
+
+@app.route('/about')
+def about_page():
+    return send_file('about.html')
 # 添加静态文件路由
 @app.route('/<path:filename>')
 def serve_static(filename):
